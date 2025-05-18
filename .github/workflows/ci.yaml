@@ -37,7 +37,7 @@ jobs:
     environment: env
     env:
       CONFIG_REPO: thanhtu19052000/manifest-config
-      IMAGE_NAME: ${{ vars.DOCKER_REGISTRY }}/your-docker-username/${{ vars.APP_NAME }}
+      IMAGE_NAME: ${{ vars.DOCKER_REGISTRY }}/tudt1/${{ vars.APP_NAME }}
       IMAGE_TAG: ${{ needs.build.outputs.commit_sha }}
     steps:
       - uses: actions/checkout@v4
