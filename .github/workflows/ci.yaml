@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: cicd
+    environment: env
     env:
       PROJECT_NAME: cicd
       DOCKER_REGISTRY: docker.io
