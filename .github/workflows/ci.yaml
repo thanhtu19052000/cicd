@@ -25,3 +25,25 @@ jobs:
           context: .
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/tudt1/${{ env.PROJECT_NAME }}:${{ github.sha }}
+
+  update-manifest:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: cicd
+    env:
+      CONFIG_REPO: thanhtu19052000/manifest-config
+      IMAGE_NAME: ${{ vars.DOCKER_REGISTRY }}/your-docker-username/${{ vars.APP_NAME }}
+      IMAGE_TAG: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.CONFIG_REPO }}
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Update manifest
+        run: |
+          sed -i "s|image:.*$|image: $IMAGE_NAME:$IMAGE_TAG|" manifests/deployment.yaml
+          git config user.email "ci-bot@example.com"
+          git config user.name "CI Bot"
+          git add .
+          git commit -m "Update image to $IMAGE_TAG" || echo "No changes to commit"
+          git push
