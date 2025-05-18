@@ -10,8 +10,13 @@ jobs:
     env:
       PROJECT_NAME: cicd
       DOCKER_REGISTRY: docker.io
+    outputs:
+      commit_sha: ${{ steps.set-sha.outputs.commit_sha }}
     steps:
       - uses: actions/checkout@v4
+      - name: Set commit SHA
+        id: set-sha
+        run: echo "commit_sha=${{ github.sha }}" >> $GITHUB_OUTPUT
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
@@ -33,7 +38,7 @@ jobs:
     env:
       CONFIG_REPO: thanhtu19052000/manifest-config
       IMAGE_NAME: ${{ vars.DOCKER_REGISTRY }}/your-docker-username/${{ vars.APP_NAME }}
-      IMAGE_TAG: ${{ github.sha }}
+      IMAGE_TAG: ${{ needs.build.outputs.commit_sha }}
     steps:
       - uses: actions/checkout@v4
         with:
